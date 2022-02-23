@@ -1,5 +1,7 @@
 package geminisdk;
 
+import java.io.File;
+
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -44,10 +46,13 @@ public class GenesisSerialiser {
 		 * If jna path is not set, then use the library path everything else uses. 
 		 */
 		String jnaPath = System.getProperty("jna.library.path");
+//		jnaPath +=";C:\\Program Files\\Tritech\\Gemini SDK\\bin\\x64";
 		if (jnaPath == null) {
 			String javaPath = System.getProperty("java.library.path");
 			if (javaPath != null) {
+				javaPath +=File.pathSeparator+"C:\\Program Files\\Tritech\\Gemini SDK\\bin\\x64";
 				System.setProperty("jna.library.path", javaPath);
+				System.setProperty("java.library.path", javaPath);
 			}
 		}
 		System.out.println("JAVA library path is " + System.getProperty("java.library.path"));

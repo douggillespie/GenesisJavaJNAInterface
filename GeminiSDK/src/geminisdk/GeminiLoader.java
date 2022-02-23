@@ -22,7 +22,8 @@ public class GeminiLoader {
 		System.out.println("Java class path " + System.getProperty("java.class.path"));
 		
 		String libraryPath;// = findLibrary();
-		libraryPath = "C:\\Program Files\\Tritech\\Genesis\\Application Files\\GeminiComms.dll";
+//		libraryPath = "C:\\Program Files\\Tritech\\Genesis\\Application Files\\GeminiComms.dll";
+		libraryPath = "C:\\Program Files\\Tritech\\Gemini SDK\\bin\\x64\\GeminiComms.dll";
 		
 		TG gf = null;
 

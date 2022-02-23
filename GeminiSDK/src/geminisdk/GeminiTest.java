@@ -22,7 +22,7 @@ public class GeminiTest extends GeminiLoader {
 		
 			
 		gt.glfCommsTest();
-//		gt.glfFileReadTest();
+		gt.glfFileReadTest();
 		
 	}
 	
