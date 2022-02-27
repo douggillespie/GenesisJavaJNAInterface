@@ -4,6 +4,7 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.ByteByReference;
 import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.ptr.ShortByReference;
+import com.sun.jna.Pointer;
 
 import geminisdk.GenesisSerialiser.GlfLib;
 import geminisdk.GenesisSerialiser.GlfLib.SigActiveFileIndex;
@@ -29,9 +30,9 @@ public class GeminiTest extends GeminiLoader {
 		GeminiTest gt = new GeminiTest();
 		
 			
-		gt.glfCommsTest();
+//		gt.glfCommsTest();
 //		gt.glfFileReadTest();
-//		gt.Svs5Test();
+		gt.Svs5Test();
 		
 	}
 	
@@ -50,8 +51,24 @@ public class GeminiTest extends GeminiLoader {
 		long ans1 = gSer.svs5StartSvs5(new Svs5Callback() {
 			
 			@Override
-			public void callback(int msgType, long size, String data) {
-				System.out.println("SvS5 callback " + msgType);
+			public void callback(int msgType, long size, Pointer dPoint) {
+				System.out.printf("SvS5 callback type %d size %d ", msgType, size);
+				if (dPoint != null) {					
+//					byte[] bData = dPoint.getByteArray(0, size);
+//					int strLen = data.length;
+//					System.out.println(" datalength is " + strLen);
+//					System.out.println(data);
+					System.out.println("");
+				}
+				else {
+					System.out.println("");
+				}
+//				processSv5Callback(msgType, size, data);
+			}
+
+			private void processSv5Callback(int msgType, long size, byte[] data) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		
@@ -77,12 +94,12 @@ public class GeminiTest extends GeminiLoader {
 		err = svs5Commands.setConfiguration(cOnline);
 		System.out.println("setOnline returned " + err);
 		
-//		try {
-//			Thread.sleep(4000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		cOnline.value = false;
 		err = svs5Commands.setConfiguration(cOnline);
 		System.out.println("setoffline returned " + err);

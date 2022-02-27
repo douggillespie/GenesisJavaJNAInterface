@@ -94,7 +94,7 @@ public class GenesisSerialiser {
 		 * Callback function for Svs5SeqLib
 		 */
 		public interface Svs5Callback extends Callback{
-			public void callback(int msgType, long size, String data);
+			public void callback(int msgType, long size, Pointer data);
 		}
 		
 		/**
