@@ -71,7 +71,7 @@ public class GeminiLoader {
 
 	public class HandlerCallback implements Callback {
 		public void callback(int eType, int len, String dataBlock) {
-			System.out.printf("HandlerCallback eType %d, len %d", eType, len);
+			System.out.printf("HandlerCallback eType %d (0x%x), len %d\n", eType, eType, len);
 		}
 	}
 	/**
@@ -564,7 +564,7 @@ Parameters:
 
 Returns:                Number of beams
 				 ****************************************/
-				int  GEMX_GetGeminiBeams(short sonarID, FloatByReference pBrgTbl );
+				int  GEMX_GetGeminiBeams(short sonarID, float[] pBrgTbl );
 
 				/*************************************//**
 Purpose: Sets the number of beams (nBeams) that the Gemini will form.

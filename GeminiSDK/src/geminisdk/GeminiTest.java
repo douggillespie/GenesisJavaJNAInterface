@@ -31,7 +31,7 @@ public class GeminiTest extends GeminiLoader {
 			
 		gt.glfCommsTest();
 //		gt.glfFileReadTest();
-		gt.Svs5Test();
+//		gt.Svs5Test();
 		
 	}
 	
@@ -133,7 +133,7 @@ public class GeminiTest extends GeminiLoader {
 		gf.GEM_GetVNumString(vNum, vNumLen);
 		System.out.println("Version: " + new String(version) + " " + new String(vNum));
 		
-		short id = 857;
+		short id = 853;
 		ByteByReference[] ipAddr = new ByteByReference[8];
 		for (int i = 0; i < 8; i++) {
 			ipAddr[i] = new ByteByReference();
@@ -141,14 +141,26 @@ public class GeminiTest extends GeminiLoader {
 		
 		gf.GEMX_GetAltSonarIPAddress(id, ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3], ipAddr[4], ipAddr[5], ipAddr[6], ipAddr[7]);
 		byte[] ipBytes = new byte [8];
+		System.out.printf("Sonar ALT IP Address: ");
 		for (int i = 0; i < 8; i++) {
 			ipBytes[i] = ipAddr[i].getValue();
 			System.out.print(ipBytes[i]);
 		}
 		System.out.println();
 		
+		float[] beams = new float[1024];
+		int fAns = gf.GEMX_GetGeminiBeams(id, beams);
+		if (fAns == 0) {
+			System.out.println("no beams found");
+		}
+		else {
+			float b1 = beams[0];
+			float b2 = beams[fAns-1];
+			System.out.printf("%d sonar beams found from %3.1f to %3.1f degrees\n", fAns, Math.toDegrees(b1), Math.toDegrees(b2));
+		}
+		
 		byte[] name = new byte[128];
-		gf.GEMX_GetDeviceName((short)-1, name, 128);
+		gf.GEMX_GetDeviceName(id, name, 128);
 		System.out.println("Device name is  " + new String(name));
 //
 //		gf.FT_GetDeviceInfoList(0, name, 128);
@@ -158,6 +170,12 @@ public class GeminiTest extends GeminiLoader {
 		
 //		byte[] swMode = new byte[30];
 //		gf.GEM_
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		gf.GEM_StopGeminiNetwork();
 	}
