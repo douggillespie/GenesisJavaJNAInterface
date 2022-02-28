@@ -4,6 +4,10 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.ByteByReference;
 import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.ptr.ShortByReference;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import com.sun.jna.Pointer;
 
 import geminisdk.GenesisSerialiser.GlfLib;
@@ -13,6 +17,7 @@ import geminisdk.GenesisSerialiser.GlfLib.SigPlaybackInfo;
 import geminisdk.GenesisSerialiser.GlfLib.Svs5Callback;
 import geminisdk.structures.ChirpMode;
 import geminisdk.structures.ConfigOnline;
+import geminisdk.structures.GemStatusPacket;
 import geminisdk.structures.PingMode;
 import geminisdk.structures.RangeFrequencyConfig;
 import geminisdk.structures.SimulateADC;
@@ -51,24 +56,47 @@ public class GeminiTest extends GeminiLoader {
 		long ans1 = gSer.svs5StartSvs5(new Svs5Callback() {
 			
 			@Override
-			public void callback(int msgType, long size, Pointer dPoint) {
+			public void callback(int msgType, long size, Pointer data) {
 				System.out.printf("SvS5 callback type %d size %d ", msgType, size);
-				if (dPoint != null) {					
-//					byte[] bData = dPoint.getByteArray(0, size);
-//					int strLen = data.length;
-//					System.out.println(" datalength is " + strLen);
-//					System.out.println(data);
-					System.out.println("");
-				}
-				else {
-					System.out.println("");
-				}
-//				processSv5Callback(msgType, size, data);
+//				if (dPoint != null) {					
+//					byte[] bData = dPoint.getByteArray(0, (int) size);
+////					int strLen = data.length;
+////					System.out.println(" datalength is " + strLen);
+////					System.out.println(data);
+//					System.out.println("");
+//				}
+//				else {
+//					System.out.println("");
+//				}
+				processSv5Callback(msgType, size, data);
 			}
 
-			private void processSv5Callback(int msgType, long size, byte[] data) {
-				// TODO Auto-generated method stub
-				
+			private void processSv5Callback(int msgType, long size, Pointer data) {
+				byte[] byteData = null;
+				if (data != null) {					
+					byteData = data.getByteArray(0, (int) size);
+				}
+				switch (msgType) {
+				case Svs5MessageType.GEMINI_STATUS:
+					geminiStatusMsg(byteData);
+					break;
+					default:
+						System.out.printf("SvS5 callback type %d size %d \n", msgType, size);
+						
+				}
+			}
+
+			private void geminiStatusMsg(byte[] byteData) {
+				GemStatusPacket gemStatus = new GemStatusPacket(byteData);
+				String ip = "?";
+				try {
+					InetAddress iNA = InetAddress.getByName(String.valueOf(Integer.toUnsignedLong(gemStatus.m_sonarAltIp)));
+					ip = iNA.getHostAddress();
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.printf("Gem status packet: sonar %d, 0x%x %s\n", gemStatus.m_sonarId, gemStatus.m_sonarFixIp, ip);
 			}
 		});
 		
@@ -95,7 +123,7 @@ public class GeminiTest extends GeminiLoader {
 		System.out.println("setOnline returned " + err);
 		
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
