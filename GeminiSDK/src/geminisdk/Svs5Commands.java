@@ -32,15 +32,30 @@ public class Svs5Commands {
 		}
 		byte[] data = geminiStructure.toBytes();
 		
-		ByteByReference bbr = new ByteByReference();
-		bbr.setValue(data[0]);
+//		ByteByReference bbr = new ByteByReference();
+//		bbr.setValue(data[0]);
 		
-		return lib.svs5SetConfiguration(commandId, data.length, bbr, 0);
+		return lib.svs5SetConfiguration(commandId, data.length, data, deviceId);
 	}
 	
-	public GeminiStructure getConfiguration(int commandId, int deviceId) {
+	public int getConfiguration(int commandId, GeminiStructure geminiStructure, int deviceId) {
+		GlfLib lib = GenesisSerialiser.getLibrary();
+		if (lib == null) {
+			return -1;
+		}
+		byte[] data = geminiStructure.toBytes();
+
+//		ByteByReference bbr = new ByteByReference();
+//		bbr.setValue(data[0]);
 		
-		return null;
+		int ans = lib.svs5GetConfiguration(commandId, data.length, data, deviceId);
+		
+		if (ans == 0) {
+			geminiStructure.fromBytes(data);
+		}
+		
+		return ans;
+		
 	}
 
 }

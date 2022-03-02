@@ -38,7 +38,6 @@ public class GeminiTest extends GeminiLoader {
 	private int[] nMessages = new int[Svs5MessageType.NUM_MESSAGETYPES];
 
 	public GeminiTest() {
-		// TODO Auto-generated constructor stub
 		glfFileCatalog = new GLFFileCatalog(null);
 	}
 
@@ -116,6 +115,7 @@ public class GeminiTest extends GeminiLoader {
 				GLFImageRecord glfRecord = new GLFImageRecord(null, 0, 0);
 				try {
 					glfFileCatalog.readGlfRecord(glfRecord, is, true);
+					System.out.println("GLF REcord from sonar " + glfRecord.tm_deviceId);
 				} catch (CatalogException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -147,9 +147,9 @@ public class GeminiTest extends GeminiLoader {
 		err = svs5Commands.setConfiguration(rfConfig);
 		System.out.println("setConfiguration returned " + err);
 
-		SimulateADC simADC = new SimulateADC(true);
-		err = svs5Commands.setConfiguration(simADC);
-		System.out.println("Simulate returned " + err);
+//		SimulateADC simADC = new SimulateADC(true);
+//		err = svs5Commands.setConfiguration(simADC);
+//		System.out.println("Simulate returned " + err);
 
 		PingMode pingMode = new PingMode();
 		err = svs5Commands.setConfiguration(pingMode);
@@ -160,7 +160,7 @@ public class GeminiTest extends GeminiLoader {
 		System.out.println("setOnline returned " + err);
 
 		try {
-			Thread.sleep(15000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
