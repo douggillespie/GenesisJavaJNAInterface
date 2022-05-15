@@ -6,9 +6,9 @@ import java.io.IOException;
 
 public class PingMode extends GeminiStructure {
 	
-	boolean m_bFreeRun = true;
+	public boolean m_bFreeRun = true;
 	
-	short m_msInterval = 20;
+	public short m_msInterval = 20;
 
 	public PingMode(byte[] inputBytes) {
 		super(inputBytes);

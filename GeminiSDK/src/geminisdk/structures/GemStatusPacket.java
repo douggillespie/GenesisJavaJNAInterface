@@ -58,7 +58,7 @@ public class GemStatusPacket extends GeminiMessage {
 		try {
 			/**
 			 * firmware version gives 8213 which is 0x2015 which is the same as the 
-			 * BF:20.15 displayed in TeaTec.
+			 * BF:20.15 displayed in SeaTec.
 			 */
 			m_firmwareVer = dataInput.readShort(); //   
 			m_sonarId = dataInput.readShort();
