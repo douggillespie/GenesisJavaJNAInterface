@@ -44,7 +44,7 @@ public class RangeFrequencyConfig extends GeminiStructure {
 	}
 
 	@Override
-	public boolean fromBytes(DataInput dataInput) {
+	public boolean fromBytes(DataInput dataInput, int length) {
 
 		try {
 			m_frequency = dataInput.readInt();

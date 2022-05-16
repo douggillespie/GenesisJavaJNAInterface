@@ -39,7 +39,7 @@ abstract public class GeminiMessage extends GeminiStructure {
 	}
 
 	@Override
-	public boolean fromBytes(DataInput dataInput) {
+	public boolean fromBytes(DataInput dataInput, int length) {
 		try {
 			m_type = dataInput.readByte();
 			m_version = dataInput.readByte();

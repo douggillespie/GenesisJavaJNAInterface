@@ -86,7 +86,12 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 		case Svs5MessageType.FRAME_RATE:
 			frameRateMessage(item.data);
 			break;
+//		case Svs5MessageType.LOGGER_REC_UPDATE:
 		default:
+			/**
+			 * Probably expecting additional callbacks here when we start recording, 
+			 * e.g. may get message LOGGER_REC_UPDATE (0x4)
+			 */
 			System.out.printf("SvS5 callback type %d size %d \n", item.messageId, item.size);
 
 		}

@@ -72,8 +72,8 @@ public class GMainImage extends GImage {
 	}
 
 	@Override
-	public boolean fromBytes(DataInput dataInput) {
-		super.fromBytes(dataInput);
+	public boolean fromBytes(DataInput dataInput, int length) {
+		super.fromBytes(dataInput, length);
 		try {
 			bearingPointer = dataInput.readLong();
 			m_uiStateFlags = dataInput.readInt();

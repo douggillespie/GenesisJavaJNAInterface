@@ -51,8 +51,8 @@ public class GemStatusPacket extends GeminiMessage {
 	  public short m_VDSLUpstreamSpeed2;
 
 	@Override
-	public boolean fromBytes(DataInput dataInput) {
-		if (super.fromBytes(dataInput) == false) {
+	public boolean fromBytes(DataInput dataInput, int length) {
+		if (super.fromBytes(dataInput, length) == false) {
 			return false;
 		}
 		try {

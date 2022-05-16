@@ -4,25 +4,22 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import tritechgemini.fileio.LittleEndianDataOutputStream;
+public class GemFileLocation extends GeminiStructure {
 
-public class GeminiRange extends GeminiStructure {
-	
-	public double range;
+	private String filePath;
 
-	public GeminiRange(byte[] inputBytes) {
+	public GemFileLocation(byte[] inputBytes) {
 		super(inputBytes);
-		// TODO Auto-generated constructor stub
 	}
 
-	public GeminiRange(double range) {
-		this.range = range;
+	public GemFileLocation(String filePath) {
+		this.filePath = filePath;
 	}
 
 	@Override
 	public boolean toBytes(DataOutput dataOutput) {
 		try {
-			dataOutput.writeDouble(range);
+			dataOutput.writeBytes(filePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -32,15 +29,18 @@ public class GeminiRange extends GeminiStructure {
 
 	@Override
 	public int defaultCommand() {
-		return SVS5_CONFIG_RANGE;
+		return SVS5_CONFIG_FILE_LOCATION;
 	}
 
 	@Override
 	public boolean fromBytes(DataInput dataInput, int length) {
+		byte[] data = new byte[length];
 		try {
-			range = dataInput.readDouble();
+			dataInput.readFully(data);
+			filePath = new String(data);
 		} catch (IOException e) {
 			e.printStackTrace();
+			filePath = null;
 			return false;
 		}
 		return true;
@@ -48,7 +48,15 @@ public class GeminiRange extends GeminiStructure {
 
 	@Override
 	protected int dataOutputSize() {
-		return Double.BYTES;
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/**
+	 * @return the filePath
+	 */
+	public String getFilePath() {
+		return filePath;
 	}
 
 }

@@ -36,7 +36,7 @@ public class PingMode extends GeminiStructure {
 	}
 
 	@Override
-	public boolean fromBytes(DataInput dataInput) {
+	public boolean fromBytes(DataInput dataInput, int length) {
 		try {
 			m_bFreeRun = (dataInput.readByte() == 0) ? false : true;
 			m_msInterval = dataInput.readShort();

@@ -34,7 +34,7 @@ public class GImage extends GeminiStructure {
 	}
 
 	@Override
-	public boolean fromBytes(DataInput dataInput) {
+	public boolean fromBytes(DataInput dataInput, int length) {
 		try {
 			m_usImageVersion = dataInput.readShort();
 			m_usRangeCompUsed = dataInput.readShort();

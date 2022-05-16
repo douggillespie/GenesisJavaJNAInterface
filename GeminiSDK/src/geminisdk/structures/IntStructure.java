@@ -28,7 +28,7 @@ abstract public class IntStructure extends GeminiStructure {
 	}
 
 	@Override
-	public boolean fromBytes(DataInput dataInput) {
+	public boolean fromBytes(DataInput dataInput, int length) {
 		try {
 			value = dataInput.readInt();
 		} catch (IOException e) {

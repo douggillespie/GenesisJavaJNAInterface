@@ -34,7 +34,7 @@ public class GeminiGain  extends GeminiStructure {
 		}
 
 		@Override
-		public boolean fromBytes(DataInput dataInput) {
+		public boolean fromBytes(DataInput dataInput, int length) {
 			try {
 				gain = dataInput.readInt();
 			} catch (IOException e) {

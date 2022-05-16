@@ -28,7 +28,7 @@ public class CommonInterfaceHeader extends GeminiStructure {
     public short  m_spare;                // Reserved for future expansion
 
 	@Override
-	public boolean fromBytes(DataInput dataInput) {
+	public boolean fromBytes(DataInput dataInput, int length) {
 		try {
 			// 21 useful bytes + three packers. 
 			m_idChar = dataInput.readByte();

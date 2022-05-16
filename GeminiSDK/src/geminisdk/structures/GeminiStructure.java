@@ -76,9 +76,10 @@ public static final int SVS5_CONFIG_PLAY_FRAME = 28 ;        //Explicitly reques
 	/**
 	 * Read data from input stream. endienness dealt with. 
 	 * @param dataInput
+	 * @param length of byte data in dataInput stream
 	 * @return true if OK
 	 */
-	public abstract boolean fromBytes(DataInput dataInput);
+	public abstract boolean fromBytes(DataInput dataInput, int length);
 	
 	public byte[] toBytes() {
 		ByteArrayOutputStream bytesOut = new ByteArrayOutputStream(dataOutputSize());
@@ -94,7 +95,10 @@ public static final int SVS5_CONFIG_PLAY_FRAME = 28 ;        //Explicitly reques
 	}
 	
 	public boolean fromBytes(byte[] data) {
-		return fromBytes(getDataInput(data));
+		if (data == null) {
+			return false;
+		}
+		return fromBytes(getDataInput(data), data.length);
 	}
 
 	private DataInput getDataInput(byte[] data) {

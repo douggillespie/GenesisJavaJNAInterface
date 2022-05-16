@@ -33,11 +33,11 @@ public class GLogTargetImage extends GeminiStructure {
 	}
 
 	@Override
-	public boolean fromBytes(DataInput dataInput) {
+	public boolean fromBytes(DataInput dataInput, int length) {
 		commonHeader = new CommonInterfaceHeader();
-		boolean headOk = commonHeader.fromBytes(dataInput);
+		boolean headOk = commonHeader.fromBytes(dataInput, length);
 		mainImage = new GMainImage();
-		boolean imageOk = mainImage.fromBytes(dataInput);
+		boolean imageOk = mainImage.fromBytes(dataInput, length);
 		
 		return headOk & imageOk;
 	}

@@ -30,7 +30,7 @@ public abstract class BoolStructure extends GeminiStructure {
 	}
 
 	@Override
-	public boolean fromBytes(DataInput dataInput) {
+	public boolean fromBytes(DataInput dataInput, int length) {
 		try {
 			value = dataInput.readByte() == 0 ? false : true;
 		} catch (IOException e) {
