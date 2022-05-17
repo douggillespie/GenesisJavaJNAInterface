@@ -43,7 +43,7 @@ public class GLogTargetImage extends GeminiStructure {
 	}
 
 	@Override
-	protected int dataOutputSize() {
+	public int dataOutputSize() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

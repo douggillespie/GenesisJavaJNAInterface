@@ -39,7 +39,7 @@ abstract public class IntStructure extends GeminiStructure {
 	}
 
 	@Override
-	protected int dataOutputSize() {
+	public int dataOutputSize() {
 		return Integer.BYTES;
 	}
 

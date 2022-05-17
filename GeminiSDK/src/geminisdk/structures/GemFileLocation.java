@@ -3,6 +3,7 @@ package geminisdk.structures;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 public class GemFileLocation extends GeminiStructure {
 
@@ -19,7 +20,9 @@ public class GemFileLocation extends GeminiStructure {
 	@Override
 	public boolean toBytes(DataOutput dataOutput) {
 		try {
-			dataOutput.writeBytes(filePath);
+			byte[] data = filePath.getBytes();//Charset.forName("UTF-16"));
+			dataOutput.write(data);
+			dataOutput.write(0); // null temrinate string ?
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -47,9 +50,11 @@ public class GemFileLocation extends GeminiStructure {
 	}
 
 	@Override
-	protected int dataOutputSize() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int dataOutputSize() {
+		if (filePath == null) {
+			return 0;
+		}
+		return filePath.length(); // give true length
 	}
 
 	/**

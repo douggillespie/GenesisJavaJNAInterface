@@ -47,7 +47,7 @@ public class GeminiRange extends GeminiStructure {
 	}
 
 	@Override
-	protected int dataOutputSize() {
+	public int dataOutputSize() {
 		return Double.BYTES;
 	}
 

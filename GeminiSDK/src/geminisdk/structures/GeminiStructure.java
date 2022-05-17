@@ -109,5 +109,5 @@ public static final int SVS5_CONFIG_PLAY_FRAME = 28 ;        //Explicitly reques
 	 * initial guess of data output size. Fastest if it's about right. 
 	 * @return
 	 */
-	protected abstract int dataOutputSize();
+	public abstract int dataOutputSize();
 }

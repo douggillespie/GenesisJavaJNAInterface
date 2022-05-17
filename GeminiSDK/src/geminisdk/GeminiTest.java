@@ -137,6 +137,7 @@ public class GeminiTest extends GeminiLoader {
 			}
 		});
 
+		try {
 		long err;
 		ChirpMode chirpMode = new ChirpMode(ChirpMode.CHIRP_AUTO);
 		err = svs5Commands.setConfiguration(chirpMode);
@@ -180,6 +181,11 @@ public class GeminiTest extends GeminiLoader {
 			if (nMessages[i] > 0) {
 				System.out.printf("Message %s (%d) received %d\n", Svs5MessageType.getMessageName(i), i, nMessages[i]);
 			}
+		}
+
+		} catch (Svs5Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}

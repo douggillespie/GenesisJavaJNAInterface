@@ -48,7 +48,7 @@ public class PingMode extends GeminiStructure {
 	}
 
 	@Override
-	protected int dataOutputSize() {
+	public int dataOutputSize() {
 		return 3;
 	}
 

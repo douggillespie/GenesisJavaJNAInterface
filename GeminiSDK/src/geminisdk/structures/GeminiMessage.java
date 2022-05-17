@@ -55,7 +55,7 @@ abstract public class GeminiMessage extends GeminiStructure {
 	}
 
 	@Override
-	protected int dataOutputSize() {
+	public int dataOutputSize() {
 		// TODO Auto-generated method stub
 		return 8;
 	}

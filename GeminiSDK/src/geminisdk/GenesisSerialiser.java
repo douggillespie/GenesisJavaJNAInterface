@@ -120,7 +120,7 @@ public class GenesisSerialiser {
 		
 		public int svs5SetConfiguration(int configType, int size, byte[] configData, int deviceId);
 		
-		public int svs5GetConfiguration(int configType, long size, byte[] configData, int deviceId);
+		public int svs5GetConfiguration(int configType, int size, byte[] configData, int deviceId);
 		
 		public long svs5StopSvs5();
 		

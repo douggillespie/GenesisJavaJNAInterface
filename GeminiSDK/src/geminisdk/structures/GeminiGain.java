@@ -45,7 +45,7 @@ public class GeminiGain  extends GeminiStructure {
 		}
 
 		@Override
-		protected int dataOutputSize() {
+		public int dataOutputSize() {
 			return Integer.BYTES;
 		}
 

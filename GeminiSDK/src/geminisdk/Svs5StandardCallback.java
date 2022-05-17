@@ -86,7 +86,9 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 		case Svs5MessageType.FRAME_RATE:
 			frameRateMessage(item.data);
 			break;
-//		case Svs5MessageType.LOGGER_REC_UPDATE:
+		case Svs5MessageType.LOGGER_REC_UPDATE:
+			recUpdateMessage(item.data);
+			break;
 		default:
 			/**
 			 * Probably expecting additional callbacks here when we start recording, 
@@ -98,6 +100,8 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 		
 	}
 	
+	protected abstract void recUpdateMessage(byte[] data);
+
 	public abstract void setFrameRate(int framesPerSecond);
 	
 	public abstract void newGLFLiveImage(GLFImageRecord glfImage);

@@ -19,9 +19,9 @@ public abstract class BoolStructure extends GeminiStructure {
 	@Override
 	public boolean toBytes(DataOutput dataOutput) {
 		try {
-			for (int i = 0; i < 4; i++) {
+//			for (int i = 0; i < 4; i++) {
 				dataOutput.writeByte(value ? 1 : 0);
-			}
+//			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -41,8 +41,8 @@ public abstract class BoolStructure extends GeminiStructure {
 	}
 
 	@Override
-	protected int dataOutputSize() {
-		return 4;
+	public int dataOutputSize() {
+		return 1;
 	}
 
 }

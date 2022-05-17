@@ -134,7 +134,7 @@ public class GemStatusPacket extends GeminiMessage {
 
 
 	@Override
-	protected int dataOutputSize() {
+	public int dataOutputSize() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
