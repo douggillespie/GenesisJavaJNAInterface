@@ -8,6 +8,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 /**
+ * Range frequency resolution: 1200i only. 
  * @author dg50
  *
  */
@@ -65,4 +66,29 @@ public class RangeFrequencyConfig extends GeminiStructure {
 		return SVS5_CONFIG_RANGE_RESOLUTION;
 	}
 
+	/**
+	 * Get the available modes. 
+	 * @return available modes (0,1,2)
+	 */
+	public static int[] getModes() {
+		int[] modes = {FREQUENCY_AUTO, FREQUENCY_LOW, FREQUENCY_HIGH};
+		return modes;
+	}
+	
+	/**
+	 * Get the name of a mode. 
+	 * @param mode mode index
+	 * @return Name
+	 */
+	public static String getModeName(int mode) {
+		switch (mode) {
+		case FREQUENCY_AUTO:
+			return "Auto";
+		case FREQUENCY_LOW:
+			return "Low";
+		case FREQUENCY_HIGH:
+			return "high";
+		}
+		return "Unknown frequency range mode";
+	}
 }

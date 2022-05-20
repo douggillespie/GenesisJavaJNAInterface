@@ -19,7 +19,7 @@ public class Svs5Commands {
 	}
 
 
-	public long setConfiguration(GeminiStructure geminiStructure) throws Svs5Exception {
+	public int setConfiguration(GeminiStructure geminiStructure) throws Svs5Exception {
 		return setConfiguration(geminiStructure, 0);
 	}
 	
