@@ -7,17 +7,7 @@ import java.io.IOException;
 abstract public class GeminiMessage extends GeminiStructure {
 
 
-	  public byte  m_type;
-	  public byte  m_version;
-	  public short m_deviceID;
-	  public short m_packetLatency;
-	  /*
-	  ** First 8 bytes are source sub device id (Hardware)
-	  ** while 2nd 8 bytes are destinataions sub device ID  (Software)
-	  ** because of endian, these should be declared otherway around
-	  */
-	  public byte m_dst_sub_device_id;
-	  public byte m_src_sub_device_id;
+	public CGemHdr gemHdr = new CGemHdr();
 	  
 	public GeminiMessage(byte[] inputBytes) {
 		super(inputBytes);
@@ -40,18 +30,10 @@ abstract public class GeminiMessage extends GeminiStructure {
 
 	@Override
 	public boolean fromBytes(DataInput dataInput, int length) {
-		try {
-			m_type = dataInput.readByte();
-			m_version = dataInput.readByte();
-			m_deviceID = dataInput.readShort();
-			m_packetLatency = dataInput.readShort();
-			m_dst_sub_device_id = dataInput.readByte();
-			m_src_sub_device_id = dataInput.readByte();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
+		if (gemHdr == null) {
+			gemHdr = new CGemHdr();
 		}
-		return true;
+		return gemHdr.fromBytes(dataInput, length);
 	}
 
 	@Override

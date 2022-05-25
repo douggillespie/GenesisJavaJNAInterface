@@ -124,6 +124,8 @@ public class GenesisSerialiser {
 		
 		public long svs5StopSvs5();
 		
+		public int setInputFileList(String[] fileNames, int nFiles);
+		
 		public int valueTest();
 		
 		

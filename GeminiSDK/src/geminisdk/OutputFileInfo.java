@@ -45,6 +45,7 @@ public class OutputFileInfo {
 			int numRecords = dis.readInt();
 			long filesize = dis.readLong();
 			long freeSpace = dis.readLong();
+			dis.skipBytes(4); // get byte alighnemtn for the next double. 
 			double percentdisk = dis.readDouble();
 			long leftSecs = dis.readLong();
 			return new OutputFileInfo(name, numRecords, filesize, freeSpace, percentdisk, leftSecs);
@@ -69,6 +70,8 @@ public class OutputFileInfo {
 	}
 
 	/**
+	 * This seems to be a count of the number of updates (callbacks message LOGGER_REC_UPDATE)
+	 * rather than the number of frames, but it does reset to 0 when a new file starts
 	 * @return the m_uiNumberOfRecords
 	 */
 	public int getM_uiNumberOfRecords() {

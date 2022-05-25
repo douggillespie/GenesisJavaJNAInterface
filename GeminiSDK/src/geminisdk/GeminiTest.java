@@ -28,6 +28,7 @@ import geminisdk.structures.RangeFrequencyConfig;
 import geminisdk.structures.SimulateADC;
 import tritechgemini.fileio.CatalogException;
 import tritechgemini.fileio.GLFFileCatalog;
+import tritechgemini.fileio.GLFGenericHeader;
 import tritechgemini.fileio.LittleEndianDataInputStream;
 import tritechgemini.imagedata.GLFImageRecord;
 
@@ -112,10 +113,17 @@ public class GeminiTest extends GeminiLoader {
 
 			private void glfLiveImage(byte[] byteData) {
 				LittleEndianDataInputStream is = new LittleEndianDataInputStream(new ByteArrayInputStream(byteData));
-				GLFImageRecord glfRecord = new GLFImageRecord(null, 0, 0);
+				GLFGenericHeader header = new GLFGenericHeader();
+				try {
+					header.read(is);
+				} catch (CatalogException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				GLFImageRecord glfRecord = new GLFImageRecord(header, null, 0, 0);
 				try {
 					glfFileCatalog.readGlfRecord(glfRecord, is, true);
-					System.out.println("GLF REcord from sonar " + glfRecord.tm_deviceId);
+					System.out.println("GLF REcord from sonar " + glfRecord.genericHeader.tm_deviceId);
 				} catch (CatalogException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -123,17 +131,17 @@ public class GeminiTest extends GeminiLoader {
 			}
 
 			private void geminiStatusMsg(byte[] byteData) {
-				GemStatusPacket gemStatus = new GemStatusPacket(byteData);
-				String ip = "?";
-				try {
-					InetAddress iNA = InetAddress.getByName(String.valueOf(Integer.toUnsignedLong(gemStatus.m_sonarAltIp)));
-					ip = iNA.getHostAddress();
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				System.out.printf("Gem status packet of %d bytes: sonar %d, 0x%x %s\n", byteData.length,
-						gemStatus.m_sonarId, gemStatus.m_sonarFixIp, ip);
+//				GemStatusPacket gemStatus = new GemStatusPacket(byteData);
+//				String ip = "?";
+//				try {
+//					InetAddress iNA = InetAddress.getByName(String.valueOf(Integer.toUnsignedLong(gemStatus.m_sonarAltIp)));
+//					ip = iNA.getHostAddress();
+//				} catch (UnknownHostException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				System.out.printf("Gem status packet of %d bytes: sonar %d, 0x%x %s\n", byteData.length,
+//						gemStatus.m_sonarId, gemStatus.m_sonarFixIp, ip);
 			}
 		});
 

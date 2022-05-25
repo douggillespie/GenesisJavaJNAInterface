@@ -12,8 +12,10 @@ import geminisdk.GenesisSerialiser.GlfLib.Svs5Callback;
 import geminisdk.structures.GemStatusPacket;
 import tritechgemini.fileio.CatalogException;
 import tritechgemini.fileio.GLFFileCatalog;
+import tritechgemini.fileio.GLFGenericHeader;
 import tritechgemini.fileio.LittleEndianDataInputStream;
 import tritechgemini.imagedata.GLFImageRecord;
+import tritechgemini.imagedata.GLFStatusData;
 
 /**
  * Standard callback for Svs5 messages. As far as is practical, these messages are receiving the data
@@ -53,12 +55,15 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 
 	private void processSv5Callback(int msgType, long size, Pointer pointer) {
 
+//		System.out.printf("Callback message %d size %d\n", msgType, size);
+		
 		synchronized (callQueue) {
 			byte[] byteData = null;
 			if (pointer != null) {					
 				byteData = pointer.getByteArray(0, (int) size);
 			}
 //			if (msgType == 2) return;
+//			Arrays.copy
 			callQueue.add(new callBackData(msgType, size, byteData.clone()));
 		}
 		
@@ -98,6 +103,7 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 	private void useQueueItem(callBackData item) {
 		switch (item.messageId) {
 		case Svs5MessageType.GEMINI_STATUS:
+//			System.out.printf("Status message with %d bytes data\n", item.size);
 			geminiStatusMsg(item.data);
 			break;
 		case Svs5MessageType.GLF_LIVE_TARGET_IMAGE:
@@ -159,7 +165,7 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 	
 	public abstract void newGLFLiveImage(GLFImageRecord glfImage);
 	
-	public abstract void newStatusPacket(GemStatusPacket statusPacket);
+	public abstract void newStatusPacket(GLFStatusData gemStatus);
 
 	private void frameRateMessage(byte[] byteData) {
 		// looks like this is a single int. It's 4 bytes. 
@@ -178,34 +184,45 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 
 	private void glfLiveImage(byte[] byteData) {
 		LittleEndianDataInputStream is = new LittleEndianDataInputStream(new ByteArrayInputStream(byteData));
-		GLFImageRecord glfRecord = new GLFImageRecord(null, 0, 0);
+		GLFGenericHeader header = new GLFGenericHeader();
+		GLFImageRecord glfRecord = null; //new GLFImageRecord(null, 0, 0);
 		try {
+			header.read(is);
+			glfRecord = new GLFImageRecord(header, null, 0, 0);
 			glfFileCatalog.readGlfRecord(glfRecord, is, true);
 		} catch (CatalogException e) {
 			e.printStackTrace();
 			return;
 		}			
 		if (verbose) {
-			System.out.println("GLF REcord from sonar " + glfRecord.tm_deviceId);
+			System.out.println("GLF REcord from sonar " + glfRecord.genericHeader.tm_deviceId);
 		}
 		newGLFLiveImage(glfRecord);
 	}
 
 	private void geminiStatusMsg(byte[] byteData) {
-		GemStatusPacket gemStatus = new GemStatusPacket(byteData);
-		String ip = "?";
 		try {
+			GLFGenericHeader header = new GLFGenericHeader();
+			LittleEndianDataInputStream dis = new LittleEndianDataInputStream(new ByteArrayInputStream(byteData));
+			header.read(dis);
+			GLFStatusData gemStatus = new GLFStatusData(header);
+			gemStatus.read(dis, true);
+			newStatusPacket(gemStatus);
+			String ip = "?";
 			InetAddress iNA = InetAddress.getByName(String.valueOf(Integer.toUnsignedLong(gemStatus.m_sonarAltIp)));
 			ip = iNA.getHostAddress();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (verbose) {
-			System.out.printf("Gem status packet of %d bytes: sonar %d, 0x%x %s\n", byteData.length,
-					gemStatus.m_sonarId, gemStatus.m_sonarFixIp, ip);
+		//		if (verbose) {
+		//			System.out.printf("Gem status packet of %d bytes: sonar %d, 0x%x %s\n", byteData.length,
+		//					gemStatus.m_sonarId, gemStatus.m_sonarFixIp, ip);
+		//		}
+		catch (CatalogException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		newStatusPacket(gemStatus);
 	}
 
 	/**
