@@ -42,10 +42,10 @@ abstract public class GeminiStructure {
 	// Playback Logger
 	public static final int SVS5_CONFIG_PLAY_START = 22;         //List of files (struct ListOfFileNames )
 	public static final int SVS5_CONFIG_PLAY_FILE_INDEX = 23;    //File Index
-	public static final int SVS5_CONFIG_PLAY_PAUSE = 24;         //Playback in pause state
+	public static final int SVS5_CONFIG_PLAY_PAUSE = 24;         //Playback in pause state (bool)
 	public static final int SVS5_CONFIG_PLAY_REPEAT = 25;        //Playback in the loopback state
 	public static final int SVS5_CONFIG_PLAY_STOP = 26;          //Stop playback
-	public static final int SVS5_CONFIG_PLAY_SPEED  = 27;         //0 for free running, 1: RealTime
+	public static final int SVS5_CONFIG_PLAY_SPEED  = 27;         //double param. 0 free run, otherwise x real time. 
 	public static final int SVS5_CONFIG_PLAY_FRAME = 28 ;        //Explicitly request frame
 
 

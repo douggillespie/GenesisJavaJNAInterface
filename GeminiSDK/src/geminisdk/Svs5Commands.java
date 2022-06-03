@@ -2,7 +2,10 @@ package geminisdk;
 
 import geminisdk.GenesisSerialiser.GlfLib;
 import geminisdk.structures.GeminiStructure;
+import tritechgemini.fileio.LittleEndianDataOutputStream;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 import com.sun.jna.ptr.ByteByReference;
@@ -117,6 +120,31 @@ public class Svs5Commands {
 			return null;
 		}
 	}
+	
+	/**
+	 * Send a double command. 
+	 * @param commandId
+	 * @param command
+	 * @param deviceId
+	 * @return
+	 * @throws Svs5Exception
+	 */
+	public int setDoubleCommand(int commandId, double command, int deviceId)  throws Svs5Exception {
+		GlfLib lib = GenesisSerialiser.getLibrary();
+		if (lib == null) {
+			throw new Svs5Exception("No Svs5Library");
+		}
+		ByteArrayOutputStream bos = new ByteArrayOutputStream(Double.BYTES);
+		LittleEndianDataOutputStream dos = new LittleEndianDataOutputStream(bos);
+		try {
+			dos.writeDouble(command);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		byte[] value = bos.toByteArray();
+		return lib.svs5SetConfiguration(commandId, value.length, value, deviceId);
+	}
+
 	
 	public int setBoolCommand(int commandId, boolean command, int deviceId)  throws Svs5Exception {
 		GlfLib lib = GenesisSerialiser.getLibrary();

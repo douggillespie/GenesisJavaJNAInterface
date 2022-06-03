@@ -10,6 +10,7 @@ import com.sun.jna.Pointer;
 
 import geminisdk.GenesisSerialiser.GlfLib.Svs5Callback;
 import geminisdk.structures.GemStatusPacket;
+import geminisdk.structures.LoggerPlaybackUpdate;
 import tritechgemini.fileio.CatalogException;
 import tritechgemini.fileio.GLFFileCatalog;
 import tritechgemini.fileio.GLFGenericHeader;
@@ -40,6 +41,8 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 	
 	private LinkedList<callBackData> callQueue = new LinkedList<>();
 
+	private boolean playbackMode;
+
 	public Svs5StandardCallback() {
 		glfFileCatalog = new GLFFileCatalog(null);
 		
@@ -64,7 +67,13 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 			}
 //			if (msgType == 2) return;
 //			Arrays.copy
-			callQueue.add(new callBackData(msgType, size, byteData.clone()));
+			callBackData queueItem = new callBackData(msgType, size, byteData.clone());
+			if (playbackMode) {
+				useQueueItem(queueItem);
+			}
+			else {
+				callQueue.add(queueItem);
+			}
 		}
 		
 		nMessages[msgType]++;
@@ -101,6 +110,9 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 	 * @param item
 	 */
 	private void useQueueItem(callBackData item) {
+//		if (item.messageId>0 && item.messageId != Svs5MessageType.GLF_LIVE_TARGET_IMAGE) {
+//			System.out.printf("Status message %d with %d bytes data\n", item.messageId, item.size);
+//		}
 		switch (item.messageId) {
 		case Svs5MessageType.GEMINI_STATUS:
 //			System.out.printf("Status message with %d bytes data\n", item.size);
@@ -111,6 +123,14 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 			break;
 		case Svs5MessageType.FRAME_RATE:
 			frameRateMessage(item.data);
+			break;
+		case Svs5MessageType.LOGGER_PLAYBACK_UPDATE:
+			// get these once per sec during file playback. size 2572
+			loggerPlaybackUpdate(item.data, item.size);			
+			break;
+		case Svs5MessageType.LOGGER_FILE_INDEX:
+			// need to deal with this one too - size 4, so just a plain int32.
+			loggerFileIndex(item.data, item.size);
 			break;
 		case Svs5MessageType.LOGGER_REC_UPDATE:
 			recUpdateMessage(item.data, item.size);
@@ -131,6 +151,43 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 		
 	}
 	
+	private void loggerFileIndex(byte[] data, long size) {
+/*
+ * Seems to just get 4 bytes of data which is the index of the playing file
+ */
+		int fileIndex = 0;
+		LittleEndianDataInputStream dis = new LittleEndianDataInputStream(new ByteArrayInputStream(data));
+		try {
+			fileIndex = dis.readInt();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		loggerFileIndex(fileIndex);
+		
+	}
+
+	private void loggerPlaybackUpdate(byte[] data, long size) {
+/*
+#define MAX_FILES_SUPPORTED         10
+#define MAX_FILENAME_LENGTH         256
+    UInt32 m_uiNumberOfRecords;   !< Number of records in total 
+    UInt32 m_uiPercentProcessed;  !< Percent of total list processed 
+    UInt32 m_uiNumberOfFiles;     !< Number of files processed or being processed 
+    char   m_filenames[MAX_FILES_SUPPORTED][MAX_FILENAME_LENGTH];           !< List of filenames 
+ */
+		LoggerPlaybackUpdate loggerPlaybackUpdate = LoggerPlaybackUpdate.readData(data, size);
+		if (loggerPlaybackUpdate != null) {
+			newLoggerPlaybackUpdate(loggerPlaybackUpdate);
+		}
+	}
+
+	/**
+	 * Callback repackaged into something sensible from Svs5MessageType.LOGGER_PLAYBACK_UPDATE
+	 * @param loggerPlaybackUpdate
+	 */
+	protected abstract void newLoggerPlaybackUpdate(LoggerPlaybackUpdate loggerPlaybackUpdate);
+
 	/**
 	 * for message Svs5MessageType.LOGGER_REC_UPDATE, create a SOutputFileInfo
 	 * @param data
@@ -152,6 +209,13 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 		LoggerStatusInfo loggerStatusInfo = new LoggerStatusInfo(data);
 		loggerStatusInfo(loggerStatusInfo); // pass on to the abstract function
 	}
+
+	/**
+	 * Called from Svs5MessageType.LOGGER_FILE_INDEX which passes a single
+	 * int32 of the file index
+	 * @param fileIndex
+	 */
+	public abstract void loggerFileIndex(int fileIndex);
 
 	/**
 	 * Callback from Svs5MessageType.LOGGER_STATUS_INFO
@@ -237,6 +301,26 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 	 */
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
+	}
+
+	/**
+	 * In playback mode, incoming data from C are sent straight for processing 
+	 * in the same thread. In non playback mode (i.e. acqusition) then data are put into 
+	 * a queue so that the JNA call can return immediately into the C. 
+	 * @return the playbackMode
+	 */
+	public boolean isPlaybackMode() {
+		return playbackMode;
+	}
+
+	/**
+	 * In playback mode, incoming data from C are sent straight for processing 
+	 * in the same thread. In non playback mode (i.e. acqusition) then data are put into 
+	 * a queue so that the JNA call can return immediately into the C. 
+	 * @param playbackMode set playback mode
+	 */
+	public void setPlaybackMode(boolean playbackMode) {
+		this.playbackMode = playbackMode;
 	}
 	
 	public class callBackData {
