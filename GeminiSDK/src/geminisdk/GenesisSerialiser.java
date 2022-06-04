@@ -81,8 +81,9 @@ public class GenesisSerialiser {
 			glfLib = Native.load(libName, GlfLib.class);
 		}
 		catch (Error e) {
-			e.printStackTrace();
-			throw new Exception(String.format("Tritech %s is not available: %s", libName, e.getMessage()));
+//			e.printStackTrace();
+//			throw new Exception(String.format("Tritech %s is not available: %s", libName, e.getMessage()));
+			System.out.println(String.format("Tritech %s is not available: %s", libName, e.getMessage()));
 		}
 		
 		return glfLib;
