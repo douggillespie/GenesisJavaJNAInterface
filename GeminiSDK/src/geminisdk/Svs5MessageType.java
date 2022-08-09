@@ -19,7 +19,7 @@ public class Svs5MessageType {
 	    public static final int  AUXPORT2_DATA = 14;
 
 	    
-	    public static final int NUM_MESSAGETYPES = 15; // number of message types. 
+	    public static final int NUM_MESSAGETYPES = 20; // number of message types. now at least 16 
 	    
 	    public static String getMessageName(int message) {
 	    	switch (message) {

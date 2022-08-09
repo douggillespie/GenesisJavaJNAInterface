@@ -59,21 +59,25 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 	private void processSv5Callback(int msgType, long size, Pointer pointer) {
 
 //		System.out.printf("Callback message %d size %d\n", msgType, size);
-		
-		synchronized (callQueue) {
-			byte[] byteData = null;
-			if (pointer != null) {					
-				byteData = pointer.getByteArray(0, (int) size);
+		try {
+			synchronized (callQueue) {
+				byte[] byteData = null;
+				if (pointer != null) {					
+					byteData = pointer.getByteArray(0, (int) size);
+				}
+				//			if (msgType == 2) return;
+				//			Arrays.copy
+				callBackData queueItem = new callBackData(msgType, size, byteData.clone());
+				if (playbackMode) {
+					useQueueItem(queueItem);
+				}
+				else {
+					callQueue.add(queueItem);
+				}
 			}
-//			if (msgType == 2) return;
-//			Arrays.copy
-			callBackData queueItem = new callBackData(msgType, size, byteData.clone());
-			if (playbackMode) {
-				useQueueItem(queueItem);
-			}
-			else {
-				callQueue.add(queueItem);
-			}
+		}
+		catch (Exception e) {
+			System.out.printf("Message %d size %d, exception %s", msgType, size, e.getMessage());
 		}
 		
 		nMessages[msgType]++;
