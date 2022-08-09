@@ -279,18 +279,19 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 			String ip = "?";
 			InetAddress iNA = InetAddress.getByName(String.valueOf(Integer.toUnsignedLong(gemStatus.m_sonarAltIp)));
 			ip = iNA.getHostAddress();
-		} catch (UnknownHostException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.printf("Error unpacking status msg length %d: %s\n", byteData.length,  e.getMessage());
+//			e.printStackTrace();
 		}
 		//		if (verbose) {
 		//			System.out.printf("Gem status packet of %d bytes: sonar %d, 0x%x %s\n", byteData.length,
 		//					gemStatus.m_sonarId, gemStatus.m_sonarFixIp, ip);
 		//		}
-		catch (CatalogException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		catch (CatalogException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	/**
