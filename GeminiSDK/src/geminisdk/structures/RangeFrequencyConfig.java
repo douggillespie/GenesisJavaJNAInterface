@@ -18,7 +18,7 @@ public class RangeFrequencyConfig extends GeminiStructure {
 	public static final int FREQUENCY_LOW = 1;
 	public static final int FREQUENCY_HIGH = 2;
 	
-	public int m_frequency = FREQUENCY_AUTO;
+	public int m_frequency = FREQUENCY_LOW;
 	
 	public double m_rangeThreshold = 40.;
 	/**
@@ -28,6 +28,9 @@ public class RangeFrequencyConfig extends GeminiStructure {
 		super(inputBytes);
 	}
 
+	public RangeFrequencyConfig(int config) {
+		this.m_frequency = config;
+	}
 
 	public RangeFrequencyConfig() {
 	}
@@ -35,7 +38,7 @@ public class RangeFrequencyConfig extends GeminiStructure {
 	@Override
 	public boolean toBytes(DataOutput dataOutput) {
 		try {
-			dataOutput.writeInt(m_frequency);
+			dataOutput.writeLong(m_frequency); // use long for an enum
 			dataOutput.writeDouble(m_rangeThreshold);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -48,7 +51,7 @@ public class RangeFrequencyConfig extends GeminiStructure {
 	public boolean fromBytes(DataInput dataInput, int length) {
 
 		try {
-			m_frequency = dataInput.readInt();
+			m_frequency = (int) dataInput.readLong();
 			m_rangeThreshold = dataInput.readDouble();
 		} catch (IOException e) {
 			e.printStackTrace();
