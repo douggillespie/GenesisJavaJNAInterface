@@ -84,6 +84,15 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 
 	}
 	
+	/**
+	 * Get the current size of the queue of SVS5 callback
+	 * messages. 
+	 * @return queue size
+	 */
+	public int getSvs5QueueSize() {
+		return callQueue.size();
+	}
+	
 	private class QueueReader implements Runnable {
 
 		@Override
@@ -229,11 +238,15 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 
 	public abstract void recUpdateMessage(OutputFileInfo outputFileInfo);
 
-	public abstract void setFrameRate(int framesPerSecond);
+	public abstract void setFrameRate(int framesPerSecond, double trueFPS);
 	
 	public abstract void newGLFLiveImage(GLFImageRecord glfImage);
 	
 	public abstract void newStatusPacket(GLFStatusData gemStatus);
+	
+	public long lastFrameMessageTime;
+	
+	public int newFrameCount;
 
 	private void frameRateMessage(byte[] byteData) {
 		// looks like this is a single int. It's 4 bytes. 
@@ -247,7 +260,14 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 		if (verbose) {
 			System.out.printf("Frame rate is %d (nFrames = %d)\n", val, nMessages[Svs5MessageType.GLF_LIVE_TARGET_IMAGE]);
 		}
-		setFrameRate(val);
+		int frames = newFrameCount;
+		long now = System.currentTimeMillis();
+		double fps = frames*1000./(now-lastFrameMessageTime);
+		if (now-lastFrameMessageTime > 2000) {
+			newFrameCount = 0;
+			lastFrameMessageTime = now;
+		}
+		setFrameRate(val, fps);
 	}
 
 	private void glfLiveImage(byte[] byteData) {
@@ -265,6 +285,7 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 		if (verbose) {
 			System.out.println("GLF REcord from sonar " + glfRecord.genericHeader.tm_deviceId);
 		}
+		newFrameCount++;
 		newGLFLiveImage(glfRecord);
 	}
 

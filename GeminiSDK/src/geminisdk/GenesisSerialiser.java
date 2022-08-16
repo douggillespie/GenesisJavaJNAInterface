@@ -127,6 +127,8 @@ public class GenesisSerialiser {
 		
 		public int setInputFileList(String[] fileNames, int nFiles);
 		
+		public int setPingMode(boolean freeRun, short msInterval, int deviceId);
+		
 		public int valueTest();
 		
 		

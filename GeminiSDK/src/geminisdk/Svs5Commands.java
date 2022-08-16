@@ -8,7 +8,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-import com.sun.jna.ptr.ByteByReference;
 
 /**
  * Wrapper around the jna interface to send objects to SvS5 
@@ -65,6 +64,16 @@ public class Svs5Commands {
 		return lib.svs5SetConfiguration(commandId, dataLength, data, deviceId);
 	}
 	
+	public int setPingMode(boolean freeRun, short msInterval) throws Svs5Exception {
+		GlfLib lib = GenesisSerialiser.getLibrary();
+		if (lib == null) {
+			throw new Svs5Exception("No Svs5Library");
+		}
+		return lib.setPingMode(freeRun, msInterval, 0);
+		
+	}
+
+
 	/**
 		 * Get a config structure from the Gemini. Use the default command for 
 		 * the structure and specified deviceId.

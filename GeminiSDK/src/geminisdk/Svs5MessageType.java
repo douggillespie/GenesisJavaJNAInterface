@@ -21,7 +21,7 @@ public class Svs5MessageType {
 	    public static final int FIRMWARE_UPGRADE_INFO = 16; //Reports back to the application for the firmware upgrade status. See FirmwareUpgradeStatus ( defined in FirmwareUpgradeDef.h)
 
 	    
-	    public static final int NUM_MESSAGETYPES = 17; // number of message types. now at least 0-16 
+	    public static final int NUM_MESSAGETYPES = 20; // number of message types. now at least 0-16 
 	    
 	    public static String getMessageName(int message) {
 	    	switch (message) {

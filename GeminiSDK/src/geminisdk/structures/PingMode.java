@@ -14,6 +14,11 @@ public class PingMode extends GeminiStructure {
 		super(inputBytes);
 	}
 
+	public PingMode(boolean freeRun, short msInterval) {
+		this.m_bFreeRun = freeRun;
+		this.m_msInterval = msInterval;
+	}
+	
 	public PingMode() {
 	}
 
