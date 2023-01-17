@@ -90,7 +90,7 @@ public class RangeFrequencyConfig extends GeminiStructure {
 		case FREQUENCY_LOW:
 			return "Low";
 		case FREQUENCY_HIGH:
-			return "high";
+			return "High";
 		}
 		return "Unknown frequency range mode";
 	}
