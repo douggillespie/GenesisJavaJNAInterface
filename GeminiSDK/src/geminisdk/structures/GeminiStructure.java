@@ -8,6 +8,7 @@ import java.io.DataOutput;
 import tritechgemini.fileio.LittleEndianDataInputStream;
 import tritechgemini.fileio.LittleEndianDataOutputStream;
 
+
 abstract public class GeminiStructure {
 
 
