@@ -129,6 +129,15 @@ public class GenesisSerialiser {
 		
 		public int setPingMode(boolean freeRun, short msInterval, int deviceId);
 		
+		/**
+		 * Set the speed of sound mode
+		 * @param useUserSos Use a fixed speed of sound set by the user
+		 * @param manualSoS Manual speed of sound set by the user
+		 * @param deviceId device Id. 
+		 * @return
+		 */
+		public int setSoSConfig(boolean useUserSoS, double manualSoS, int deviceId);
+		
 		public int valueTest();
 		
 		

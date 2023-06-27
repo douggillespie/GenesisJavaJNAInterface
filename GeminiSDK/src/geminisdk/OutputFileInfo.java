@@ -19,6 +19,7 @@ public class OutputFileInfo {
 	private long m_diskSpaceFreeBytes;
 	private double m_percentDiskSpaceFree;
 	private long m_recordingTimeLeftSecs;
+	private long creationTime = System.currentTimeMillis();
     
 	public OutputFileInfo(String m_strFileName, int m_uiNumberOfRecords, long m_fileSizeBytes,
 			long m_diskSpaceFreeBytes, double m_percentDiskSpaceFree, long m_recordingTimeLeftSecs) {
@@ -53,6 +54,33 @@ public class OutputFileInfo {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	/**
+	 * Are they the same ? 
+	 * @param other
+	 * @return true if main parameters seem the same. 
+	 */
+	public boolean equals(OutputFileInfo other) {
+		if (other == null) {
+			return false;
+		}
+		if (m_strFileName != null) {
+			if (m_strFileName.equals(other.m_strFileName) == false) {
+				return false;
+			}
+		}
+		if (m_uiNumberOfRecords != other.m_uiNumberOfRecords) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("File \"%s\" nRec %d, percentDisk %3.1f\n", getM_strFileName(),
+				getM_uiNumberOfRecords(), getM_percentDiskSpaceFree());
 	}
 
 	/**
@@ -104,6 +132,10 @@ public class OutputFileInfo {
 	 */
 	public long getM_recordingTimeLeftSecs() {
 		return m_recordingTimeLeftSecs;
+	}
+
+	public long getCreationTime() {
+		return creationTime;
 	}
 	
 }

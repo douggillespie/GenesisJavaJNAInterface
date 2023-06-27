@@ -72,6 +72,24 @@ public class Svs5Commands {
 		return lib.setPingMode(freeRun, msInterval, 0);
 		
 	}
+	
+	/**
+	 * Set speed of sound configuation
+	 * @param useUserSoS
+	 * @param manualSoS
+	 * @param deviceId
+	 * @return
+	 * @throws Svs5Exception
+	 */
+	public int setSoSConfig(boolean useUserSoS, double manualSoS, int deviceId) throws Svs5Exception {
+		GlfLib lib = GenesisSerialiser.getLibrary();
+		if (lib == null) {
+			throw new Svs5Exception("No Svs5Library");
+		}
+		return lib.setSoSConfig(useUserSoS, manualSoS, deviceId);
+	}
+	
+	
 
 
 	/**
