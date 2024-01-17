@@ -65,7 +65,7 @@ public class GenesisSerialiser {
 		if (jnaPath == null) {
 			String javaPath = System.getProperty("java.library.path");
 			if (javaPath != null) {
-				javaPath +=File.pathSeparator+"C:\\Program Files\\Tritech\\Gemini SDK\\bin\\x64";
+				javaPath += File.pathSeparator+"C:\\Program Files\\Tritech\\Gemini SDK\\bin\\x64";
 				System.setProperty("jna.library.path", javaPath);
 				System.setProperty("java.library.path", javaPath);
 			}
@@ -84,7 +84,23 @@ public class GenesisSerialiser {
 //			e.printStackTrace();
 //			throw new Exception(String.format("Tritech %s is not available: %s", libName, e.getMessage()));
 			System.out.println(String.format("Tritech %s is not available: %s", libName, e.getMessage()));
+			return null;
 		}
+		
+		/*
+		 * Check the underlying dll versoin and the input version of the interface lib. 
+		 * 
+		 */
+		String sdkVersion = glfLib.svs5GetLibraryVersionInfo();
+		String interfaceVersion = null;
+		try {
+			interfaceVersion = glfLib.getSDKCompatibility();
+		}
+		catch (Error e) {
+			System.out.println("You are using an old " + libName);
+		}
+		System.out.printf("PAMGuard JNA interface v%s, Tritech SDK version %s\n",
+				sdkVersion, interfaceVersion);
 		
 		return glfLib;
 	}
@@ -116,6 +132,13 @@ public class GenesisSerialiser {
 		 * Guess I'll have to try both and see which is least painful. 
 		 */
 		public String svs5GetLibraryVersionInfo();
+		
+		/**
+		 * Get the SDK version the interface DLL was developed for. <p>
+		 * This should be the same as the return from svs5GetLibraryVersionInfo()
+		 * @return
+		 */
+		public String getSDKCompatibility();
 		
 		public long svs5StartSvs5(Svs5Callback svs5Callback);
 		
@@ -175,6 +198,16 @@ public class GenesisSerialiser {
 		
 		int glfGetRecord(Pointer readerHandle, int recordIndex, PamGlfRecord.ByReference glfRecord);
 	
+		/**
+		 * GEMX commands
+		 */
+		public void gemxSetPingMode(int sonarID, int pingMethod);
+		
+		public void gemxAutoPingConfig(int sonarID, float range, int gain, float sos);
+
+		public void gemxSendGeminiPingConfig(int sonarID);
+
+		public void gemxSetRangeCompression(int sonarID, int compressionLevel, int compressionType);
 
 	}
 }

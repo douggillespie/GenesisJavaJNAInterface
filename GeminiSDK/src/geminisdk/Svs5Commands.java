@@ -17,14 +17,14 @@ import java.util.Arrays;
 public class Svs5Commands {
 
 	public Svs5Commands() {
-		
+
 	}
 
 
 	public int setConfiguration(GeminiStructure geminiStructure) throws Svs5Exception {
 		return setConfiguration(geminiStructure, 0);
 	}
-	
+
 	/**
 	 * Send a config structure to the Gemini. Use the default command for 
 	 * the structure and specified deviceId.
@@ -36,7 +36,7 @@ public class Svs5Commands {
 	public int setConfiguration(GeminiStructure geminiStructure, int deviceId) throws Svs5Exception {
 		return setConfiguration(geminiStructure.defaultCommand(), geminiStructure, deviceId);
 	}
-	
+
 	/**
 	 * Send a config structure to the Gemini. Use the default command for 
 	 * the structure and specified deviceId.
@@ -57,22 +57,22 @@ public class Svs5Commands {
 			dataLength = data.length;
 			dataLength = Math.max(dataLength, geminiStructure.dataOutputSize());
 		}
-		
-//		ByteByReference bbr = new ByteByReference();
-//		bbr.setValue(data[0]);
-		
+
+		//		ByteByReference bbr = new ByteByReference();
+		//		bbr.setValue(data[0]);
+
 		return lib.svs5SetConfiguration(commandId, dataLength, data, deviceId);
 	}
-	
+
 	public int setPingMode(boolean freeRun, short msInterval) throws Svs5Exception {
 		GlfLib lib = GenesisSerialiser.getLibrary();
 		if (lib == null) {
 			throw new Svs5Exception("No Svs5Library");
 		}
 		return lib.setPingMode(freeRun, msInterval, 0);
-		
+
 	}
-	
+
 	/**
 	 * Set speed of sound configuation
 	 * @param useUserSoS
@@ -88,37 +88,37 @@ public class Svs5Commands {
 		}
 		return lib.setSoSConfig(useUserSoS, manualSoS, deviceId);
 	}
-	
-	
+
+
 
 
 	/**
-		 * Get a config structure from the Gemini. Use the default command for 
-		 * the structure and specified deviceId.
-		 * @param commandId overrides command in the gemini control structuer
-		 * @param geminiStructure Gemini control structure must exist with appropriate memory allocation. 
-		 * @param deviceId device id (not sure if this is index or id !). 
-		 * @return Error code from Svs5ErrorType
-		 */
-		public int getConfiguration(int commandId, GeminiStructure geminiStructure, int deviceId)  throws Svs5Exception {
-			GlfLib lib = GenesisSerialiser.getLibrary();
-			if (lib == null) {
-				throw new Svs5Exception("No Svs5Library");
-			}
-			byte[] data = geminiStructure.toBytes();
-	
-	//		ByteByReference bbr = new ByteByReference();
-	//		bbr.setValue(data[0]);
-			
-			int ans = lib.svs5GetConfiguration(commandId, data.length, data, deviceId);
-			
-			if (ans == 0) {
-				geminiStructure.fromBytes(data);
-			}
-			
-			return ans;
-			
+	 * Get a config structure from the Gemini. Use the default command for 
+	 * the structure and specified deviceId.
+	 * @param commandId overrides command in the gemini control structuer
+	 * @param geminiStructure Gemini control structure must exist with appropriate memory allocation. 
+	 * @param deviceId device id (not sure if this is index or id !). 
+	 * @return Error code from Svs5ErrorType
+	 */
+	public int getConfiguration(int commandId, GeminiStructure geminiStructure, int deviceId)  throws Svs5Exception {
+		GlfLib lib = GenesisSerialiser.getLibrary();
+		if (lib == null) {
+			throw new Svs5Exception("No Svs5Library");
 		}
+		byte[] data = geminiStructure.toBytes();
+
+		//		ByteByReference bbr = new ByteByReference();
+		//		bbr.setValue(data[0]);
+
+		int ans = lib.svs5GetConfiguration(commandId, data.length, data, deviceId);
+
+		if (ans == 0) {
+			geminiStructure.fromBytes(data);
+		}
+
+		return ans;
+
+	}
 
 
 	public long sendStringCommand(int commandId, String string, int deviceId)  throws Svs5Exception {
@@ -131,14 +131,14 @@ public class Svs5Commands {
 		data = Arrays.copyOf(data, len+1);
 		return lib.svs5SetConfiguration(commandId, len, data, deviceId);
 	}
-	
+
 	public String getStringCommand(int commandId, int maxLength, int deviceId)  throws Svs5Exception {
 		GlfLib lib = GenesisSerialiser.getLibrary();
 		if (lib == null) {
 			throw new Svs5Exception("No Svs5Library");
 		}
 		byte[] data = new byte[maxLength];
-//		data[0] = 1;
+		//		data[0] = 1;
 		int err = lib.svs5GetConfiguration(commandId, maxLength, data, deviceId);
 		if (err == 0) {
 			return new String(data);
@@ -147,7 +147,7 @@ public class Svs5Commands {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Send a double command. 
 	 * @param commandId
@@ -172,7 +172,17 @@ public class Svs5Commands {
 		return lib.svs5SetConfiguration(commandId, value.length, value, deviceId);
 	}
 
-	
+	/**
+	 * Set the high resolution flag using SVS5_CONFIG_HIGH_RESOLUTION
+	 * @param high true / false resolution flag.
+	 * @param deviceId
+	 * @return
+	 * @throws Svs5Exception 
+	 */
+	public int setHighResolution(boolean high, int deviceId) throws Svs5Exception {
+		return setBoolCommand(GeminiStructure.SVS5_CONFIG_HIGH_RESOLUTION, high, deviceId);
+	}
+
 	public int setBoolCommand(int commandId, boolean command, int deviceId)  throws Svs5Exception {
 		GlfLib lib = GenesisSerialiser.getLibrary();
 		if (lib == null) {
@@ -182,7 +192,7 @@ public class Svs5Commands {
 		value[0] = (byte) (command ? 1 : 0);
 		return lib.svs5SetConfiguration(commandId, 1, value, deviceId);
 	}
-	
+
 	public boolean getBoolCommand(int commandId, int deviceId) throws Svs5Exception {
 		GlfLib lib = GenesisSerialiser.getLibrary();
 		if (lib == null) {
@@ -194,6 +204,71 @@ public class Svs5Commands {
 			throw new Svs5Exception(ans);
 		}
 		return value[0] == 0 ? false : true;
+	}
+	
+	/**
+	 * GEMX Commands
+	 */
+
+	public void gemxSetPingMode(int sonarID, int pingMethod) throws Svs5Exception {
+		GlfLib lib = GenesisSerialiser.getLibrary();
+		if (lib == null) {
+			throw new Svs5Exception("No Svs5Library");
+		}
+		lib.gemxSetPingMode(sonarID, pingMethod);
+	}
+
+	/**
+	 * This function tells the library to build a ping configuration packet using the range, gain and
+speed of sound specified in the function call, then calculating all other values for the ping
+from the range, the gain, and its internal defaults. The ping will be built so that the sonar
+head pings once in response. The ping configuration packet is sent to the Gemini sonar head
+when GEMX_SendGeminiPingConfig is called.
+	 * @param sonarID
+	 * @param range
+	 * @param gain
+	 * @param sos
+	 * @throws Svs5Exception
+	 */
+	public void gemxAutoPingConfig(int sonarID, float range, int gain, float sos) throws Svs5Exception {
+		GlfLib lib = GenesisSerialiser.getLibrary();
+		if (lib == null) {
+			throw new Svs5Exception("No Svs5Library");
+		}
+		lib.gemxAutoPingConfig(sonarID, range, gain, sos);
+	}
+
+	public void gemxSendGeminiPingConfig(int sonarID) throws Svs5Exception {
+		GlfLib lib = GenesisSerialiser.getLibrary();
+		if (lib == null) {
+			throw new Svs5Exception("No Svs5Library");
+		}
+		lib.gemxSendGeminiPingConfig(sonarID);
+	}
+
+	/**
+	 * This function sets the Rng_comp field in the ping configuration which will be sent to the head
+	 * when a ping is requested.<br>
+	 * compressionLevel Meaning (i.e. compressionFactor)<br>
+	 * 0 No range compression<br>
+	 * 1 2 * range compression<br>
+	 * 2 4 * range compression<br>
+	 * 3 8 * range compression<br>
+	 * 4 16 * range compression<br>
+	 * compressionType Meaning<br>
+	 * 0 Use average compression<br>
+	 * 1 Use peak compression<br>
+	 * @param sonarID
+	 * @param compressionLevel
+	 * @param compressionType
+	 * @throws Svs5Exception
+	 */
+	public void gemxSetRangeCompression(int sonarID, int compressionLevel, int compressionType) throws Svs5Exception {
+		GlfLib lib = GenesisSerialiser.getLibrary();
+		if (lib == null) {
+			throw new Svs5Exception("No Svs5Library");
+		}
+		lib.gemxSetRangeCompression(sonarID, compressionLevel, compressionType);
 	}
 
 }

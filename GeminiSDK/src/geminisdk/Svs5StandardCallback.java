@@ -56,7 +56,7 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 		processSv5Callback(msgType, size, data);
 	}
 
-	private void processSv5Callback(int msgType, long size, Pointer pointer) {
+	public void processSv5Callback(int msgType, long size, Pointer pointer) {
 
 //		System.out.printf("Callback message %d size %d\n", msgType, size);
 		try {

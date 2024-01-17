@@ -8,7 +8,8 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 /**
- * Range frequency resolution: 1200i only. 
+ * Range frequency resolution: 1200i only.  Using SVS5_CONFIG_RANGE_RESOLUTION <br>
+ * This is basically a switch between 720 and 1200 kHz modes. 
  * @author dg50
  *
  */
