@@ -152,6 +152,13 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 			// getting this when the hard drive is full. 
 			loggerStatusInfo(item.data, item.size);
 			break;
+		case Svs5MessageType.AUXPORT1_DATA:
+		case Svs5MessageType.AUXPORT2_DATA:
+			// these all come in at start. None are useful. 
+			break;
+		case Svs5MessageType.FIRMWARE_UPGRADE_INFO:
+//			System.out.println(toString().valueOf(item.data));
+			break;
 		default:
 			/**
 			 * Probably expecting additional callbacks here when we start recording, 

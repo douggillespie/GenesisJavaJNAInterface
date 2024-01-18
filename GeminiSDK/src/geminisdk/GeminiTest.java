@@ -93,6 +93,13 @@ public class GeminiTest extends GeminiLoader {
 				case Svs5MessageType.FRAME_RATE:
 					frameRateMessage(byteData);
 					break;
+				case Svs5MessageType.AUXPORT1_DATA:
+				case Svs5MessageType.AUXPORT2_DATA:
+					// these all come in at start. None are useful. 
+					break;
+				case Svs5MessageType.FIRMWARE_UPGRADE_INFO:
+					System.out.println(toString().valueOf(byteData));
+					break;
 				default:
 					System.out.printf("SvS5 callback type %d size %d \n", msgType, size);
 
