@@ -119,14 +119,14 @@ public class Svs5Commands {
 		return ans;
 
 	}
-
-
+	
 	public long sendStringCommand(int commandId, String string, int deviceId)  throws Svs5Exception {
 		GlfLib lib = GenesisSerialiser.getLibrary();
 		if (lib == null) {
 			throw new Svs5Exception("No Svs5Library");
 		}
 		byte[] data = string.getBytes();
+		// it's going into C so need to generate a null terminated string. 
 		int len = data.length+1;
 		data = Arrays.copyOf(data, len+1);
 		return lib.svs5SetConfiguration(commandId, len, data, deviceId);
