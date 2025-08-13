@@ -146,6 +146,7 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 			loggerFileIndex(item.data, item.size);
 			break;
 		case Svs5MessageType.LOGGER_REC_UPDATE:
+//			System.out.println("Logger update");
 			recUpdateMessage(item.data, item.size);
 			break;
 		case Svs5MessageType.LOGGER_STATUS_INFO:
@@ -251,6 +252,12 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 	
 	public abstract void newStatusPacket(GLFStatusData gemStatus);
 	
+	/**
+	 * Name / version of software for logging purposes. 
+	 * @return
+	 */
+	public abstract String getSoftwareName();
+	
 	public long lastFrameMessageTime;
 	
 	public int newFrameCount;
@@ -301,7 +308,7 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 			GLFGenericHeader header = new GLFGenericHeader();
 			LittleEndianDataInputStream dis = new LittleEndianDataInputStream(new ByteArrayInputStream(byteData));
 			header.read(dis);
-			GLFStatusData gemStatus = new GLFStatusData(header);
+			GLFStatusData gemStatus = new GLFStatusData(header, getSoftwareName());
 			gemStatus.read(dis, true);
 			newStatusPacket(gemStatus);
 			String ip = "?";
