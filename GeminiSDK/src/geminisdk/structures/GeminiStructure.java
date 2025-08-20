@@ -11,6 +11,12 @@ import tritechgemini.fileio.LittleEndianDataOutputStream;
 
 abstract public class GeminiStructure {
 
+	/**
+	 * This list follows the order of enums defined in Svs5SequencerAPI.h
+	 * however it's not used as a direct index, but in a lookup table
+	 * converting from these command id's to the C enums in Svs5JavaInterface.cpp
+	 * This list must exactly match the ones defined in Svs5JavaInterface.h. 
+	 */
 
 	public static final int SVS5_CONFIG_ONLINE = 0;             // Enable/Disable streaming ( bool )
 	public static final int SVS5_CONFIG_RANGE = 1;              // Range ( 1 - 120 ) in meters ( double )
@@ -33,21 +39,32 @@ abstract public class GeminiStructure {
 	public static final int SVS5_CONFIG_AUX_PORT = 18;           // Configure Aux port ( See AuxPortConfig structure )
 	// Note: Sonar should be online/pinging when sending the AUX port configuration message
 
+    // Note: Sonar should be online/pinging when sending the AUX port configuration message
+	public static final int SVS5_CONFIG_NOISE_REDUCTION = 19;    // Configure Noise Reduction (Only supported for Micron Gemini)
+
+	public static final int SVS5_CONFIG_FIRMWARE_LOCATION = 20;  // Configure firmware file location
+	public static final int SVS5_CONFIG_UPGRADE_FIRMWARE = 21;   // Upgrade firmware on the target device
+	public static final int SVS5_CONFIG_ABORT_UPGRADE = 22;      // Cancel firmware Upgrade on the target device
+
+	/**
+	 * The four enums above were introduced in SvS5V40 and put everything out of kilter
+	 */
+	private static int V40Extra = 4;
 	// Config logger (ECD/GLF)
-	public static final int SVS5_CONFIG_LOGGER = 19;             // Configure logger (default : GLF )
+	public static final int SVS5_CONFIG_LOGGER = 19+V40Extra;             // Configure logger (default : GLF )
 
 	// Record Logger
-	public static final int SVS5_CONFIG_FILE_LOCATION = 20;      // Configure default location ( const char* )
-	public static final int SVS5_CONFIG_REC = 21;                // Start/Stop logger ( bool )
+	public static final int SVS5_CONFIG_FILE_LOCATION = 20+V40Extra;      // Configure default location ( const char* )
+	public static final int SVS5_CONFIG_REC = 21+V40Extra;                // Start/Stop logger ( bool )
 
 	// Playback Logger
-	public static final int SVS5_CONFIG_PLAY_START = 22;         //List of files (struct ListOfFileNames )
-	public static final int SVS5_CONFIG_PLAY_FILE_INDEX = 23;    //File Index
-	public static final int SVS5_CONFIG_PLAY_PAUSE = 24;         //Playback in pause state (bool)
-	public static final int SVS5_CONFIG_PLAY_REPEAT = 25;        //Playback in the loopback state
-	public static final int SVS5_CONFIG_PLAY_STOP = 26;          //Stop playback
-	public static final int SVS5_CONFIG_PLAY_SPEED  = 27;         //double param. 0 free run, otherwise x real time. 
-	public static final int SVS5_CONFIG_PLAY_FRAME = 28 ;        //Explicitly request frame
+	public static final int SVS5_CONFIG_PLAY_START = 22+V40Extra;         //List of files (struct ListOfFileNames )
+	public static final int SVS5_CONFIG_PLAY_FILE_INDEX = 23+V40Extra;    //File Index
+	public static final int SVS5_CONFIG_PLAY_PAUSE = 24+V40Extra;         //Playback in pause state (bool)
+	public static final int SVS5_CONFIG_PLAY_REPEAT = 25+V40Extra;        //Playback in the loopback state
+	public static final int SVS5_CONFIG_PLAY_STOP = 26+V40Extra;          //Stop playback
+	public static final int SVS5_CONFIG_PLAY_SPEED  = 27+V40Extra;         //double param. 0 free run, otherwise x real time. 
+	public static final int SVS5_CONFIG_PLAY_FRAME = 28+V40Extra ;        //Explicitly request frame
 
 
 	/**

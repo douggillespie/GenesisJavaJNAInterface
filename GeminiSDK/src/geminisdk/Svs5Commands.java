@@ -64,6 +64,13 @@ public class Svs5Commands {
 		return lib.svs5SetConfiguration(commandId, dataLength, data, deviceId);
 	}
 
+	/**
+	 * Svs5 call to set ping mode
+	 * @param freeRun free run
+	 * @param msInterval interval between pings in milliseconds. 
+	 * @return
+	 * @throws Svs5Exception
+	 */
 	public int setPingMode(boolean freeRun, short msInterval) throws Svs5Exception {
 		GlfLib lib = GenesisSerialiser.getLibrary();
 		if (lib == null) {
@@ -210,6 +217,16 @@ public class Svs5Commands {
 	 * GEMX Commands
 	 */
 
+	/**
+	 * Purpose: Configure the ping mode
+Parameters:
+    sonarID             Sonar ID
+    pingMethod          0: Ping once on receipt of ping configuration message
+                        1: Ping repeatedly at interval fixed by GEMX_SetInterPingPeriod
+	 * @param sonarID
+	 * @param pingMethod
+	 * @throws Svs5Exception
+	 */
 	public void gemxSetPingMode(int sonarID, int pingMethod) throws Svs5Exception {
 		GlfLib lib = GenesisSerialiser.getLibrary();
 		if (lib == null) {

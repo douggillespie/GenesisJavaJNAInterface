@@ -70,8 +70,8 @@ public class GenesisSerialiser {
 				System.setProperty("java.library.path", javaPath);
 			}
 		}
-		System.out.println("JAVA library path is " + System.getProperty("java.library.path"));
-		System.out.println("JNA library path is " + System.getProperty("jna.library.path"));
+//		System.out.println("JAVA library path is " + System.getProperty("java.library.path"));
+//		System.out.println("JNA library path is " + System.getProperty("jna.library.path"));
 
 		/*
 		 * Two dependencies for my own tritech lib are GenesisSerializer.dll and zlibwapi.dll and these must be 
@@ -140,16 +140,57 @@ public class GenesisSerialiser {
 		 */
 		public String getSDKCompatibility();
 		
+		/**
+		 * Call to SequencerApi::StartSvs5 - Starts Svs5 library, look for compatible network interface provided and start listening
+         from Gemini network interface e.g. broadcast sonar status messages
+		 * @param svs5Callback
+		 * @return
+		 */
 		public long svs5StartSvs5(Svs5Callback svs5Callback);
 		
+		/**
+		 * Call to Svs5SetConfiguration : Sets the configuration in the library so it can configure sonar
+         accordingly.
+		 * @param configType
+		 * @param size
+		 * @param configData
+		 * @param deviceId
+		 * @return
+		 */
 		public int svs5SetConfiguration(int configType, int size, byte[] configData, int deviceId);
 		
+		/**
+		 * Call to Svs5GetConfiguration : Gets the last configuration set by the application.
+		 * @param configType
+		 * @param size
+		 * @param configData
+		 * @param deviceId
+		 * @return
+		 */
 		public int svs5GetConfiguration(int configType, int size, byte[] configData, int deviceId);
 		
+		/**
+		 * Stop Svs5 library, Stop listening from the Gemini network interface, release all allocated
+         resources and exit
+		 * @return
+		 */
 		public long svs5StopSvs5();
 		
+		/**
+		 * 
+		 * @param fileNames
+		 * @param nFiles
+		 * @return
+		 */
 		public int setInputFileList(String[] fileNames, int nFiles);
 		
+		/**
+		 * Calls SequencerApi::Svs5SetConfiguration(SequencerApi::SVS5_CONFIG_PING_MODE
+		 * @param freeRun
+		 * @param msInterval
+		 * @param deviceId
+		 * @return
+		 */
 		public int setPingMode(boolean freeRun, short msInterval, int deviceId);
 		
 		/**
