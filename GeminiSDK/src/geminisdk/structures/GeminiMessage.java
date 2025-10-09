@@ -33,7 +33,7 @@ abstract public class GeminiMessage extends GeminiStructure {
 		if (gemHdr == null) {
 			gemHdr = new CGemHdr();
 		}
-		return gemHdr.fromBytes(dataInput, length);
+		return gemHdr.read(dataInput);
 	}
 
 	@Override
