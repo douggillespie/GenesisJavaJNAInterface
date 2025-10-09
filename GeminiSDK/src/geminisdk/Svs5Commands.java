@@ -71,12 +71,12 @@ public class Svs5Commands {
 	 * @return
 	 * @throws Svs5Exception
 	 */
-	public int setPingMode(boolean freeRun, short msInterval) throws Svs5Exception {
+	public int setPingMode(boolean freeRun, short msInterval, short deviceId) throws Svs5Exception {
 		GlfLib lib = GenesisSerialiser.getLibrary();
 		if (lib == null) {
 			throw new Svs5Exception("No Svs5Library");
 		}
-		return lib.setPingMode(freeRun, msInterval, 0);
+		return lib.setPingMode(freeRun, msInterval, deviceId);
 
 	}
 
