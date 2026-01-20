@@ -104,6 +104,7 @@ public class Test_GEMX {
 		lib.gemxAutoPingConfig(sonars[0], 55f, 100, 1458.f);
 //		lib.gemxSendGeminiPingConfig(sonars[0]);
 		lib.gemxSetPingMode(sonars[0], 0);
+		lib.gemxSetRangeCompression(sonars[0], 4, 0);
 		
 		// seems to take a few s to settle and be ready
 		try {
@@ -127,7 +128,7 @@ public class Test_GEMX {
 			long tic2 = lastPingSent;
 			lib.gemxSendGeminiPingConfig(sonars[0]);
 			long toc2 = System.currentTimeMillis()-tic2;
-			System.out.printf("Ping sent in %d millis at %s\n", toc2, System.currentTimeMillis()-globPingStart);
+//			System.out.printf("Ping sent in %d millis at %s\n", toc2, System.currentTimeMillis()-globPingStart);
 //			System.out.printf("%d", System.currentTimeMillis());
 			pingsSent++;
 		}
@@ -166,7 +167,7 @@ public class Test_GEMX {
 	}
 
 	private class GemCallback implements GEMXCallback {
-
+		private int lineCount = 0;
 		@Override
 		public void callback(int msgType, int size, Pointer cData) {
 			byte[] data = null;
@@ -200,15 +201,18 @@ public class Test_GEMX {
 				cGemHdr.read(dis);
 				CGemPingHead pingHead = new CGemPingHead(cGemHdr);
 				pingHead.read(dis);
+				lineCount = 0;
+				System.out.printf("Ping head data size = %d x %d compression %d\n", 
+						pingHead.m_numBeams, pingHead.m_endRange, pingHead.m_rangeCompressionUsed);
 //				System.out.printf(",%d\n", pingHead.m_transmitTimestamp);
 				break;
 			case CGemMessage.PING_TAIL:
 //				System.out.printf("%13s received at %dms after ping\n", CGemMessage.toMessageName(msgType), System.currentTimeMillis()-lastPingSent);
 				break;
 			case CGemMessage.PING_TAIL_EX:
-				System.out.printf("%13s at %dms after ping, %dms after last data\n",  
+				System.out.printf("%13s at %dms after ping, %dms after last data, line count %d\n",  
 						CGemMessage.toMessageName(msgType), System.currentTimeMillis()-lastPingSent,
-						System.currentTimeMillis()-lastDataTime);
+						System.currentTimeMillis()-lastDataTime, lineCount);
 				int nBeam = lib.gemxGetGeminiBeams(sonars[0], null);
 				float beamData[] = new float[nBeam];
 				lib.gemxGetGeminiBeams(sonars[0], beamData);
@@ -220,6 +224,7 @@ public class Test_GEMX {
 				cGemHdr.read(dis);
 				CGemPingLine pingLine = new CGemPingLine(cGemHdr);
 				pingLine.read(dis);
+				lineCount++;
 				break;
 			case 33:
 				//no sense coming out of this. 

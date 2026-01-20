@@ -58,7 +58,7 @@ public class CGemPingHead extends CGemData {
 			m_RLEThresholdUsed = dis.readByte();
 			m_rangeCompressionUsed = dis.readByte();
 			m_decimation = dis.readByte();
-			System.out.printf("New ping head id %d\n", Short.toUnsignedInt(m_pingID));
+//			System.out.printf("New ping head id %d\n", Short.toUnsignedInt(m_pingID));
 		}
 		catch (IOException e) {
 			e.printStackTrace();

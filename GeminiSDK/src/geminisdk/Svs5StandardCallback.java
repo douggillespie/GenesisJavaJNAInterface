@@ -65,8 +65,6 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 				if (pointer != null) {					
 					byteData = pointer.getByteArray(0, (int) size);
 				}
-				//			if (msgType == 2) return;
-				//			Arrays.copy
 				callBackData queueItem = new callBackData(msgType, size, byteData.clone());
 				if (playbackMode) {
 					useQueueItem(queueItem);
@@ -159,6 +157,10 @@ public abstract class Svs5StandardCallback implements Svs5Callback {
 			break;
 		case Svs5MessageType.FIRMWARE_UPGRADE_INFO:
 //			System.out.println(toString().valueOf(item.data));
+			break;
+		case Svs5MessageType.COMPASS_RECORD:
+		case Svs5MessageType.GPS_RECORD:
+			System.out.println("Compass or GPS record: " + item.messageId);
 			break;
 		default:
 			/**
